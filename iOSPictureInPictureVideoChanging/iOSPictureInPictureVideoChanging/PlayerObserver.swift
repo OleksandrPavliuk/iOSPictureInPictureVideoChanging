@@ -1,4 +1,3 @@
-//  Copyright © 2016 One by Aol : Publishers. All rights reserved.
 
 import Foundation
 import AVFoundation
@@ -161,6 +160,9 @@ public final class PlayerObserver: NSObject {
             let ranges = item.loadedTimeRanges.map { $0.timeRangeValue }
             if let range = ranges.last {
                 callbacks.bufferedTimeUpdated?(range.end)
+                print("CurrentITEM has ragnes count \(item.asset)  = \(Float(range.duration.value)/Float(range.duration.timescale))")
+            } else {
+                print("CurrentITEM has no ranges \(item.asset)")
             }
             
         default:

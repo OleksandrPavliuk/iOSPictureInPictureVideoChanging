@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FE143D1B1F025CE40009E2CA /* PlayerItemObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE143D1A1F025CE40009E2CA /* PlayerItemObserver.swift */; };
 		FE1AEC2A1F01322A00E130D2 /* PlayerObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1AEC291F01322A00E130D2 /* PlayerObserver.swift */; };
 		FEB49F291EFC32C400488170 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEB49F281EFC32C400488170 /* AppDelegate.swift */; };
 		FEB49F2B1EFC32C400488170 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEB49F2A1EFC32C400488170 /* PlayerViewController.swift */; };
@@ -16,6 +17,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		FE143D1A1F025CE40009E2CA /* PlayerItemObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerItemObserver.swift; sourceTree = "<group>"; };
 		FE1AEC291F01322A00E130D2 /* PlayerObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerObserver.swift; sourceTree = "<group>"; };
 		FEB49F251EFC32C400488170 /* iOSPictureInPictureVideoChanging.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iOSPictureInPictureVideoChanging.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FEB49F281EFC32C400488170 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -57,6 +59,7 @@
 			isa = PBXGroup;
 			children = (
 				FE1AEC291F01322A00E130D2 /* PlayerObserver.swift */,
+				FE143D1A1F025CE40009E2CA /* PlayerItemObserver.swift */,
 				FEB49F281EFC32C400488170 /* AppDelegate.swift */,
 				FEB49F2A1EFC32C400488170 /* PlayerViewController.swift */,
 				FEB49F2C1EFC32C400488170 /* Main.storyboard */,
@@ -147,6 +150,7 @@
 				FE1AEC2A1F01322A00E130D2 /* PlayerObserver.swift in Sources */,
 				FEB49F2B1EFC32C400488170 /* PlayerViewController.swift in Sources */,
 				FEB49F291EFC32C400488170 /* AppDelegate.swift in Sources */,
+				FE143D1B1F025CE40009E2CA /* PlayerItemObserver.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

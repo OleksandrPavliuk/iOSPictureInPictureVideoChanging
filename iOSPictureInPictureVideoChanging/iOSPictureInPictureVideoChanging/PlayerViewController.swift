@@ -9,13 +9,16 @@ class PlayerViewController: UIViewController, AVPictureInPictureControllerDelega
     private var playerViewControllerKVOContext = 0
     
     lazy var player = AVPlayer()
+    var playerPreloader: AVPlayer? = AVPlayer()
     
     var pictureInPictureController: AVPictureInPictureController!
     
     private var observer: PlayerObserver?
     
     private var model = Model(urlStrings: ["http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4",
-                                        "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"])
+        "http://techslides.com/demos/sample-videos/small.mp4"])
+    
+    private var observersOfItems: [PlayerItemObserver] = []
     
     var playerView: PlayerView {
         return self.view as! PlayerView
@@ -73,7 +76,7 @@ class PlayerViewController: UIViewController, AVPictureInPictureControllerDelega
                 currentTime = 0.0
             }
             
-            player.play()
+            playAdVideo()
         }
         else {
             player.pause()
@@ -96,12 +99,21 @@ class PlayerViewController: UIViewController, AVPictureInPictureControllerDelega
     
     // MARK: - View Handling
     
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        
+        model.items.forEach { (item) in
+            var callbacks = PlayerItemObserver.Callbacks()
+            let obs = PlayerItemObserver(callbacks: callbacks, playerItem: item)
+            observersOfItems.append(obs)
+        }
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         playerView.playerLayer?.player = player
         
-        playNextVideo()
         
         timeSlider.translatesAutoresizingMaskIntoConstraints = true
         timeSlider.autoresizingMask = .flexibleWidth
@@ -119,16 +131,33 @@ class PlayerViewController: UIViewController, AVPictureInPictureControllerDelega
         cleanUpPlayerPeriodicTimeObserver()
     }
     
-    private func playNextVideo() {
+    private func playAdVideo() {
         
-        if let nextAVPlayerItem = model.nextItem() {
-            playerItem = nextAVPlayerItem
-            player.play()
-        }
+        playerItem = model.items.first
+        player.play()
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
-            self.playNextVideo()
+        playerPreloader?.replaceCurrentItem(with: model.items[1])
+        
+//        playerItem = model.items[0]
+//        player.play()
+    }
+    
+    private func playContentVideo() {
+        
+
+        playerPreloader?.replaceCurrentItem(with: nil)
+        playerPreloader = nil
+        
+        let itemNew = AVPlayerItem(asset: model.items[1].asset)
+        
+        if let urlAsset = model.items[1].asset as? AVURLAsset {
+            print(urlAsset.assetCache)
         }
+        playerItem = itemNew
+        player.play()
+
+//        playerItem = model.items[1]
+//        player.play()
     }
     
     private func setupObservers() {
@@ -138,6 +167,11 @@ class PlayerViewController: UIViewController, AVPictureInPictureControllerDelega
         var callbacks = PlayerObserver.Callbacks()
         weak var this = self
 
+        
+//        callbacks.bufferedTimeUpdated = { time in
+//            print("time = ", time)
+//        }
+        
         callbacks.readyState = { item in
             if this?.pictureInPictureController == nil {
                 this?.setupPictureInPicturePlayback()
@@ -176,12 +210,12 @@ class PlayerViewController: UIViewController, AVPictureInPictureControllerDelega
         }
 
         callbacks.endOfVideo = {
-            this?.playNextVideo()
+            this?.playContentVideo()
         }
 
-        callbacks.playbackReady = {
-            print("playbackReady = \($0)")
-        }
+//        callbacks.playbackReady = {
+//            print("playbackReady = \($0)")
+//        }
         
         observer = PlayerObserver(
             callbacks: callbacks,
@@ -240,9 +274,7 @@ class PlayerViewController: UIViewController, AVPictureInPictureControllerDelega
         let alertController = UIAlertController(title: "Error", message: error?.localizedDescription, preferredStyle: .alert)
         
         let alertAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-        
         alertController.addAction(alertAction)
-        
         present(alertController, animated: true, completion: nil)
     }
 }
@@ -267,14 +299,13 @@ class PlayerView: UIView {
 extension PlayerViewController {
     struct Model {
         private var currentUrlPlayingIndex: Int = 0
-        private let items: [AVPlayerItem]
+        let items: [AVPlayerItem]
         
         init(urlStrings: [String]) {
             
             items = urlStrings.flatMap {
                 guard let videoUrl = URL(string: $0) else { return nil }
-                let asset = AVURLAsset(url: videoUrl)
-                return AVPlayerItem(asset: asset)
+                return AVPlayerItem(url: videoUrl)
             }
         }
         
