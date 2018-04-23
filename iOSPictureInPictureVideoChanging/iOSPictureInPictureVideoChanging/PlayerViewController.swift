@@ -4,6 +4,7 @@ import AVFoundation
 import UIKit
 import AVKit
 
+//version 2
 class PlayerViewController: UIViewController, AVPictureInPictureControllerDelegate {
     
     private var playerViewControllerKVOContext = 0
